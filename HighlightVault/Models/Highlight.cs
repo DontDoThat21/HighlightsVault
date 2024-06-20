@@ -13,6 +13,7 @@ namespace HighlightsVault.Models
         public string SteamID { get; set; }
 
         [MaxLength(100)]
+        [Required(ErrorMessage = "User name is required")]
         public string HighlightPersonName { get; set; }
         [Required(ErrorMessage = "User description is required")]
         public string UserDescription { get; set; }
