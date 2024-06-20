@@ -1,0 +1,136 @@
+﻿@using HighlightsVault.Helpers
+@using HighlightsVault.Models;
+@model List<Highlight>
+
+@{
+    var isHasAccess = Context.Session.GetString("HasAccess") == "true";
+}
+
+@foreach (var highlight in Model)
+{
+    if (isHasAccess)
+    {
+        <tr class="@HighlightsHelper.GetRowClass(highlight, ref HighlightsHelper.previousGroupColorId, ref HighlightsHelper.previousGroupId)">
+            <td>
+                <a href="@highlight.ProfileUrl" target="_blank">
+                    <img style="border-radius: 30px; padding: 10px;" id="profilePicture_@highlight.ID" src="@HighlightsHelper.GetImageSrc(highlight.ProfilePicture)" alt="Steam Profile Picture" width="120" height="120">
+                </a>
+                @if (DateTime.UtcNow - highlight.CreatedAt <= TimeSpan.FromHours(24))
+                {
+                    <div>
+                        <img id="preview_@highlight.ID" src="" alt="Profile Picture Preview" width="80" height="80" style="display: none; border-radius: 30px; margin: 20px;">
+                        <input type="file" id="profilePictureInput_@highlight.ID" name="ProfilePicture" accept="image/*" onchange="previewImage(this, '@highlight.ID')">
+                        <br id="profilePictureInputBreakLineFirst_@highlight.ID" style="display: none;">
+                        <br id="profilePictureInputBreakLineSecond_@highlight.ID" style="display: none;">
+                        <button type="button" id="saveButton_@highlight.ID" style="display: none;" onclick="saveChanges('@highlight.ID')">Save</button>
+                        &nbsp;
+                        <button type="button" id="discardButton_@highlight.ID" style="display: none;" onclick="discardChanges('@highlight.ID')">Discard</button>
+                    </div>
+                }
+            </td>
+            <td>
+                @if (DateTime.UtcNow - highlight.CreatedAt <= TimeSpan.FromHours(24))
+                {
+                    <input class="editable-Field" type="text" id="steamName_@highlight.ID" value="@highlight.HighlightPersonName" form="editForm_@highlight.ID" />
+                }
+                else
+                {
+                    <span>@highlight.HighlightPersonName</span>
+                }
+            </td>
+            <td>@highlight.SteamID</td>
+            <td>
+                @if (DateTime.UtcNow - highlight.CreatedAt <= TimeSpan.FromHours(24))
+                {
+                    <textarea class="editable-Field" spellcheck="true" type="text"
+                    id="userDescription_@highlight.ID" form="editForm_@highlight.ID" 
+                    onchange="updateModel(this, 'UserDescription', '@highlight.ID')">@highlight.UserDescription
+                    </textarea>
+                }
+                else
+                {
+                    @highlight.UserDescription
+                }
+            </td>
+            <td style="text-align: center;">
+                @if (highlight.Clip != null)
+                {
+                    <video style="border-radius: 5px;" id="clip_@highlight.ID" width="160" height="120" controls>
+                        <source src="@Url.Action("GetClip", new { id = highlight.ID })" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    @if (DateTime.UtcNow - highlight.CreatedAt <= TimeSpan.FromHours(24))
+                    {
+                        <a href="#" style="text-decoration: none; font-weight: bold; color: gold;" onclick="uploadVideo('@highlight.ID')">Replace Video</a>
+
+                    }
+                    <input type="file" id="videoInput_@highlight.ID" name="VideoFile" accept="video/*" style="display: none;" onchange="saveChanges('@highlight.ID')">
+                }
+                else
+                {
+                    <br />
+                    <span>No clip saved</span>
+                    <br />
+                    <br />
+                    @if (DateTime.UtcNow - highlight.CreatedAt <= TimeSpan.FromHours(24))
+                    {
+                        <a href="#" style="text-decoration: none; font-weight: bold; color: gold;" onclick="uploadVideo('@highlight.ID')">Upload Video</a>
+                        <input type="file" id="videoInput_@highlight.ID" name="VideoFile" accept="video/*" style="display: none;" onchange="saveChanges('@highlight.ID')">
+                    }                   
+                }
+            </td>
+            <td>
+                @if (DateTime.UtcNow - highlight.CreatedAt <= TimeSpan.FromHours(24))
+                {
+                    <input type="date" id="highlightDate_@highlight.ID" value="@highlight.HighlightDate.ToString("yyyy-MM-dd")" form="editForm_@highlight.ID" />
+                }
+                else
+                {
+                    <span>@highlight.HighlightDate.ToString("MM/dd/yyyy")</span>
+                }
+            </td>
+            <td style="text-align: center;">
+                @if (DateTime.UtcNow - highlight.CreatedAt <= TimeSpan.FromHours(24))
+                {
+                    <br />
+                    <button type="button" class="btn btn-primary" onclick="saveChanges('@highlight.ID')">&nbsp;Save&nbsp;</button>
+                    <br />
+                    <br />
+                    <form method="post" action="/Home/DeleteHighlight/@highlight.ID" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                }
+            </td>
+            
+        </tr>
+    }
+    else
+    {
+        <tr class="@HighlightsHelper.GetRowClass(highlight, ref HighlightsHelper.previousGroupColorId, ref HighlightsHelper.previousGroupId)">
+            <td>
+                <a href="@highlight.ProfileUrl" target="_blank">
+                    <img style="border-radius: 30px; padding: 10px;" id="profilePicture_@highlight.ID" src="@HighlightsHelper.GetImageSrc(highlight.ProfilePicture)" alt="Steam Profile Picture" width="120" height="120">
+                </a>
+            </td>
+            <td>@highlight.HighlightPersonName</td>
+            <td>@highlight.SteamID</td>
+            <td>@highlight.UserDescription</td>
+            <td style="text-align: center;">
+                @if (highlight.Clip != null)
+                {
+                    <video style="border-radius: 5px;" id="clip_@highlight.ID" width="160" height="120" controls>
+                        <source src="@Url.Action("GetClip", new { id = highlight.ID })" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                }
+                else
+                {
+                    <br />
+                    <span>No clip yet</span>
+                }
+            </td>
+            <td>@highlight.HighlightDate.ToString("MM/dd/yyyy")</td>
+            <td></td>
+        </tr>
+    }
+}
