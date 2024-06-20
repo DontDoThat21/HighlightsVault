@@ -26,7 +26,7 @@ namespace HighlightsVault.Controllers
         {
             if (TempData.ContainsKey("ErrorMessage"))
             {
-                string err = TempData["ErrorMessage"].ToString();
+                string err = TempData["ErrorMessage"].ToString() ?? "";
                 ModelState.AddModelError(string.Empty, err);
             }
 
@@ -164,8 +164,13 @@ namespace HighlightsVault.Controllers
                             return RedirectToAction("HighlightsVault");
                         }
                     }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "No Steam ID processed. Did you enter a SteamID?";
+                        return RedirectToAction("HighlightsVault");
+                    }
 
-                    HighlightsVaultGroup newGroup = null;
+                    HighlightsVaultGroup newGroup = new HighlightsVaultGroup();
                     if (createGroup)
                     {
                         newGroup = new HighlightsVaultGroup { CreatedAt = DateTime.Now };
@@ -278,7 +283,7 @@ namespace HighlightsVault.Controllers
             {
                 isHasAccess = bool.Parse(HttpContext.Session.GetString("HasAccess"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new NotFoundResult();
             }
@@ -352,7 +357,7 @@ namespace HighlightsVault.Controllers
                     _context.Update(highlight);
                     await _context.SaveChangesAsync();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     throw;
                 }
