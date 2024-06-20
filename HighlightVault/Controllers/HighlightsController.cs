@@ -208,7 +208,7 @@ namespace HighlightsVault.Controllers
                         {
                             // Valid steam id entered
                             // Fetch user profile data using Steam Web API
-                            var steamProfileUrl = $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=1AF2C3C4D50621471ACCAB137D8A161F&steamids={newHighlight.SteamID}";
+                            var steamProfileUrl = $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=[REPLACEWITHYOURSTEAMKEY]&steamids={newHighlight.SteamID}";
                             using (var httpClient = new HttpClient())
                             {
                                 var response = await httpClient.GetAsync(steamProfileUrl);
@@ -414,7 +414,7 @@ namespace HighlightsVault.Controllers
             }
 
             // Check against the Steam Web API to validate if the SteamID exists
-            var steamProfileUrl = $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=1AF2C3C4D50621471ACCAB137D8A161F&steamids={steamID}";
+            var steamProfileUrl = $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=[REPLACEWITHYOURSTEAMKEY]&steamids={steamID}";
             using (var httpClient = new HttpClient())
             {
                 var response = httpClient.GetAsync(steamProfileUrl).Result;
@@ -432,57 +432,7 @@ namespace HighlightsVault.Controllers
             }
             return false; // SteamID does not exist or API request failed
         }
-
-        private async Task<Highlight> CreateHighlightAsync(string steamID, string description, DateTime highlightDate, int? groupId)
-        {
-            // Get the current date and time
-            DateTime currentDateTime = DateTime.Now;
-
-            // Append the current time (hour, minute, second) to the selected highlight date
-            DateTime highlightDateTime = new DateTime(highlightDate.Year, highlightDate.Month, highlightDate.Day,
-                                                   currentDateTime.Hour, currentDateTime.Minute, currentDateTime.Second);
-
-            // Create a new GreatBookHighlights object
-            var newHighlight = new Highlight
-            {
-                SteamID = steamID,
-                UserDescription = description,
-                HighlightDate = highlightDateTime, // Use the combined date and time
-                CreatedAt = DateTime.Now,
-                GroupId = groupId
-            };
-
-            // Fetch user profile data using Steam Web API
-            var steamProfileUrl = $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=1AF2C3C4D50621471ACCAB137D8A161F&steamids={steamID}";
-            using (var httpClient = new HttpClient())
-            {
-                var response = await httpClient.GetAsync(steamProfileUrl);
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync();
-                    dynamic data = JsonConvert.DeserializeObject(json);
-                    var profile = data.response.players[0];
-                    newHighlight.ProfilePictureUrl = profile.avatarfull.ToString();
-                    newHighlight.ProfileUrl = profile.profileurl.ToString();
-                    newHighlight.HighlightPersonName = profile.personaname.ToString();
-
-                    if (!string.IsNullOrEmpty(newHighlight.ProfilePictureUrl))
-                    {
-                        byte[] imageBytes = await DownloadImageAsync(newHighlight.ProfilePictureUrl);
-                        newHighlight.ProfilePicture = imageBytes;
-                    }
-                }
-                else
-                {
-                    // Handle error
-                    newHighlight.ProfilePictureUrl = "https://avatars.steamstatic.com/9008d99567b5a95b16432e30f2d81067e36f49b2_full.jpg";
-                    newHighlight.ProfileUrl = "https://steamcommunity.com/profiles/76561198046513952/";
-                }
-            }
-
-            return newHighlight;
-        }
-
+        
         private async Task<byte[]> DownloadImageAsync(string imageUrl)
         {
             using (var httpClient = new HttpClient())
