@@ -1,4 +1,4 @@
-namespace HighlightVault.Models
+namespace HighlightsVault.Models
 {
     public class ErrorViewModel
     {
