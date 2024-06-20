@@ -10,6 +10,9 @@ using System.Text.RegularExpressions;
 
 namespace HighlightsVault.Controllers
 {
+    /// <summary>
+    /// Responsible for nearly all of the Highlights method (add, delete, edit, retrieve) functionality.
+    /// </summary>
     public class HighlightsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -110,6 +113,10 @@ namespace HighlightsVault.Controllers
             }
         }
 
+        /// <summary>
+        /// Called from the footer of an authenticated user's Highlights Vault view.
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> AddHighlight(string steamID, string steamIDs,
             string userDescription, string userDescriptionMultiple,
@@ -168,6 +175,8 @@ namespace HighlightsVault.Controllers
 
                     for (int i = 0; i < steamIDOrTitleList.Count; i++)
                     {
+                        // My biggest regret with this app, was calling the same AddHighlight method for Multiple and Singular highlights..
+                        // consider refactoring (called from JS AJAX script IIRC)
                         var newHighlight = new Highlight();
                         if (steamIDOrTitleList.Count == 1) // handle single insert
                         {
@@ -229,6 +238,7 @@ namespace HighlightsVault.Controllers
                                 }
                                 else
                                 {
+                                    // Probably not great defaults..
                                     newHighlight.ProfilePictureUrl = "https://avatars.steamstatic.com/5536d0161c0ddd455c94f6f908379dde60125d01_full.jpg";
                                     newHighlight.ProfileUrl = "https://steamcommunity.com/profiles/76561198973143587/";
                                 }
@@ -252,13 +262,17 @@ namespace HighlightsVault.Controllers
             }
         }
 
+        /// <summary>
+        /// Called from JS AJAX when a user clicks the Save button.
+        /// </summary>
+        /// <returns>Refreshes view.</returns>
         [HttpPost]
         public async Task<IActionResult> EditHighlight([FromForm] int Id, [FromForm] string SteamName, [FromForm] string UserDescription,
             [FromForm] DateTime highlightDate,
             [FromForm] IFormFile profilePicture,
             [FromForm] IFormFile videoFile)
         {
-            // very basic auth
+            // very basic auth based off password entry on index view
             bool isHasAccess;
             try
             {
@@ -348,6 +362,12 @@ namespace HighlightsVault.Controllers
             
         }
 
+        /// <summary>
+        /// Deletes a highlight. Only displayed for users who have entered a valid password,
+        /// and the Highlight date was within the last 24h.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> DeleteHighlight(int id)
         {
@@ -370,6 +390,11 @@ namespace HighlightsVault.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns file of associated Highlight's Video upload. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult GetClip(int id)
         {
@@ -389,6 +414,11 @@ namespace HighlightsVault.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        /// <summary>
+        /// Simple Steam ID "string extension method" basically, that returns the 17 length Steam ID.
+        /// </summary>
+        /// <param name="steamID"></param>
+        /// <returns></returns>
         public string ExtractSteamIDFromProfileURL(string steamID)
         {
             // Check if the input is in the Steam Community profile URL format
@@ -405,6 +435,11 @@ namespace HighlightsVault.Controllers
             return steamID; // Return the input as it is (assuming it's already a valid SteamID64)
         }
 
+        /// <summary>
+        /// Calls Steam's API and validates the supplied Steam ID is valid and associated to an existing user.
+        /// </summary>
+        /// <param name="steamID"></param>
+        /// <returns></returns>
         public bool IsValidSteamID64(string steamID)
         {
             // SteamID64 format: 17-digit number
@@ -433,6 +468,11 @@ namespace HighlightsVault.Controllers
             return false; // SteamID does not exist or API request failed
         }
         
+        /// <summary>
+        /// Returns Byte array of the new image upload.
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        /// <returns></returns>
         private async Task<byte[]> DownloadImageAsync(string imageUrl)
         {
             using (var httpClient = new HttpClient())
@@ -446,6 +486,11 @@ namespace HighlightsVault.Controllers
             return null;
         }
 
+        /// <summary>
+        /// Returns a path for an image retrieved from the database.
+        /// </summary>
+        /// <param name="imageBytes">Byte array of image coming from database.</param>
+        /// <returns>Javascript Img src path for HTML.</returns>
         public string GetImageSrc(byte[] imageBytes)
         {
             if (imageBytes != null && imageBytes.Length > 0)
