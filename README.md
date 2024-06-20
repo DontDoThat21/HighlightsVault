@@ -14,6 +14,7 @@ It's not too awful but, I probably should have seperated these methods. Maybe on
 Thanks for viewing.
 
 ---- Main table
+
 USE [HighlightsVault]
 GO
 
@@ -52,6 +53,7 @@ GO
 
 
 ---- Highlight Vaults foreign key table containing group definitions when adding multiple users at once.
+
 USE [HighlightsVault]
 GO
 
@@ -72,7 +74,8 @@ CREATE TABLE [dbo].[HighlightsVaultGroups](
 ) ON [PRIMARY]
 GO
 
----- Fairly primitive table that stores simple passwords that trigger different views for the main page text box entry
+---- Fairly primitive table that stores simple passwords that trigger different views for the main page text box entry.
+
 USE [HighlightsVault]
 GO
 
