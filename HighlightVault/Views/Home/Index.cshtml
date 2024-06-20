@@ -1,8 +1,57 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model PasswordViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@{
+    ViewData["Title"] = "Highlights Access";
+}
+<div class="highlight-vaults-armory-background">
+    <br />
+    <br />
+    <br />
+    <div class="text-center">
+        <h2 class="display-4" style="color: ghostwhite">Welcome to the</h2>
+        <br/>
+        <h1 class="display-4" style="color: gold; font-weight:900;">HIGHLIGHTS VAULT</h1>
+    </div>
+
+    <div class="d-flex justify-content-center" style="padding: 20px;">
+        <div class="col-md-4">
+            <form asp-action="Index" method="post">
+                <br />
+                <br />
+                <div class="form-group text-center">
+                    <label asp-for="InputPassword" style="border-radius: 20px; padding: 20px;font-size: 36px; color: ghostwhite; background-color: black; font-weight: 500;" class="control-label">Password</label>
+                    <br />
+                    <br />
+                    <input asp-for="InputPassword" style="font-size: 30px" type="password" class="form-control text-center" />
+                    <span asp-validation-for="InputPassword" class="text-danger"></span>
+                </div>
+                <br />
+                <br />
+                <br />
+                <div class="form-group text-center">
+                    <input type="submit" value="EDIT THE HIGHLIGHTS" style="background-color: darkgoldenrod; border: 21px ridge #454545;" class="btn btn-primary" />
+                </div>
+                <br />
+                <br />
+                <div class="text-center">
+                    <a href="/Home/HighlightsVault" style="text-decoration: none;">
+                        <span style="background-color: darkred; border: 21px ridge #454545; color: ghostwhite; padding: 10px;">ACCESS THE HIGHLIGHTS</span>
+                    </a>
+                </div>
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <br />
+                    <br />
+                    <div class="text-danger" style="font-weight: bolder; width: 100%; display: flex; justify-content: center;">
+                        <div style="background-color: ghostwhite; border-radius: 10px; opacity: .8; margin: 20px; padding: 10px;">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 </div>
