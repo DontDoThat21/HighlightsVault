@@ -184,6 +184,10 @@ namespace HighlightsVault.Controllers
                             TempData["ErrorMessage"] = "One or more SteamIDs are invalid or do not exist.";
                             return RedirectToAction("HighlightsVault");
                         }
+                        else
+                        {
+                            isValidSteamId = true;
+                        }
                     }
                     else
                     {
@@ -191,7 +195,7 @@ namespace HighlightsVault.Controllers
                         return RedirectToAction("HighlightsVault");
                     }
 
-                    HighlightsVaultGroup newGroup = new HighlightsVaultGroup();
+                    HighlightsVaultGroup newGroup = new HighlightsVaultGroup { GroupId = null };
                     if (createGroup)
                     {
                         newGroup = new HighlightsVaultGroup { CreatedAt = DateTime.Now };
@@ -264,7 +268,7 @@ namespace HighlightsVault.Controllers
                                 }
                                 else
                                 {
-                                    // Probably not great defaults..
+                                    // Probably not the greatest defaults..
                                     newHighlight.ProfilePictureUrl = "https://avatars.steamstatic.com/5536d0161c0ddd455c94f6f908379dde60125d01_full.jpg";
                                     newHighlight.ProfileUrl = "https://steamcommunity.com/profiles/76561198973143587/";
                                 }
