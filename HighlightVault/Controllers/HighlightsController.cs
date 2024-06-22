@@ -24,10 +24,17 @@ namespace HighlightsVault.Controllers
 
         public IActionResult Index()
         {
-            if (TempData.ContainsKey("ErrorMessage"))
+            try
             {
-                string err = TempData["ErrorMessage"].ToString() ?? "";
-                ModelState.AddModelError(string.Empty, err);
+                if (TempData.ContainsKey("ErrorMessage"))
+                {
+                    string err = TempData["ErrorMessage"].ToString() ?? "";
+                    ModelState.AddModelError(string.Empty, err);
+                }
+            }
+            catch(Exception)
+            {
+
             }
 
             return View();
@@ -60,10 +67,17 @@ namespace HighlightsVault.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                TempData["ErrorMessage"] = $"An error occurred while trying to load the main highlights login page.\n{ex.Message}";
-                return View(model);
-            }            
+                try
+                {
+                    Console.WriteLine(ex.Message);
+                    TempData["ErrorMessage"] = $"An error occurred while trying to load the main highlights login page.\n{ex.Message}";
+                    return View(model);
+                }
+                catch (Exception)
+                {
+                    return View(model);
+                }
+            }
         }
 
         /// <summary>
@@ -74,11 +88,18 @@ namespace HighlightsVault.Controllers
         /// <returns></returns>
         public async Task<IActionResult> HighlightsVault(int page = 1, int pageSize = 10) // int page = 1, int pageSize = 10
         {
-            if (TempData.ContainsKey("ErrorMessage"))
+            try
             {
-                string err = TempData["ErrorMessage"].ToString();
-                ModelState.AddModelError(string.Empty, err);
+                if (TempData.ContainsKey("ErrorMessage"))
+                {
+                    string err = TempData["ErrorMessage"].ToString();
+                    ModelState.AddModelError(string.Empty, err);
+                }
             }
+            catch (Exception)
+            {
+            }
+            
 
             List<Highlight> highlights = new List<Highlight>();
             try
