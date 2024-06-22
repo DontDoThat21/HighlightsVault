@@ -1,6 +1,9 @@
 Highlights Vault is a .NET Core MVC application that stores descriptions, names, dates, a picture, and a "highlight" video clip per row.
 The application has two "modes" powered by simple Password entry (SQL table entry with a password. Should consider changing this ESPECIALLY if/when not using this locally.)
 
+![image](https://github.com/DontDoThat21/HighlightsVault/assets/46426868/1bce7ab1-6ce2-4077-bd9b-76b773b32394)
+
+
 Supports Steam Api adding and automatically saving (profile picture to the database directly as bytes/blob object) Steam User's datas (name, picture) to the SQL Server DB.
 https://steamcommunity.com/dev/apikey
 
