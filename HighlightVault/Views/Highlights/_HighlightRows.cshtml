@@ -6,6 +6,9 @@
     var isHasAccess = Context.Session.GetString("HasAccess") == "true";
 }
 
+@* This is essentially a "rows" component, in "Blazor/Angular" terms.
+This is a partial view and represents a list of rows. *@
+
 @foreach (var highlight in Model)
 {
     if (isHasAccess)
@@ -86,7 +89,7 @@
                 }
                 else
                 {
-                    <span>@highlight.HighlightDate.ToString("MM/dd/yyyy")</span>
+                    <span>@highlight.HighlightDate.ToString("MM-dd-yyyy")</span>
                 }
             </td>
             <td style="text-align: center;">
@@ -96,7 +99,7 @@
                     <button type="button" class="btn btn-primary" onclick="saveChanges('@highlight.ID')">&nbsp;Save&nbsp;</button>
                     <br />
                     <br />
-                    <form method="post" action="/Home/DeleteHighlight/@highlight.ID" style="display:inline;">
+                    <form method="post" action="/Highlights/DeleteHighlight/@highlight.ID" style="display:inline;">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 }
@@ -129,7 +132,7 @@
                     <span>No clip yet</span>
                 }
             </td>
-            <td>@highlight.HighlightDate.ToString("MM/dd/yyyy")</td>
+            <td>@highlight.HighlightDate.ToString("MM-dd-yyyy")</td>
             <td></td>
         </tr>
     }
