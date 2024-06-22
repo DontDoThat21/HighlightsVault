@@ -9,8 +9,9 @@
 <div class="highlight-vaults-background">
     <div class="highlight-vaults-content" id="content">
         <div style="display: flex; align-items: center; padding: 2px;">
-            <h1 style="color: gold; margin-right: 70px;">@ViewData["Title"]</h1>
-            <a href="/Highlights/index/" style="color: orange; text-decoration: none; font-weight: bold; margin-right: 60px;">BACK TO THE HIGHLIGHTS VAULT LOGIN</a>
+            <h1 style="color: gold; background-color: black; padding: 6px; border-radius: 10px; margin-right: 70px;">@ViewData["Title"]</h1>
+            <a href="/Highlights/index/" style="color: orange; background-color: black; padding: 10px; border-radius: 10px; text-decoration:
+            none; font-weight: bold; margin-right: 60px;">BACK TO THE HIGHLIGHTS VAULT LOGIN</a>
             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
             <span style="color: gold; font-weight: 700; font-size: 26px;">TOTAL HIGHLIGHTS &nbsp; @Model.TotalHighlights</></span>
             @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
