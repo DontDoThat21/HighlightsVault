@@ -53,7 +53,7 @@ namespace HighlightsVault
                 // Configure the HTTP request pipeline.
                 if (!app.Environment.IsDevelopment())
                 {
-                    app.UseExceptionHandler("/Home/Error");
+                    //app.UseExceptionHandler("/Highlights/Error");
                     app.UseHsts();
                 }
                 app.UseStaticFiles();
@@ -65,7 +65,7 @@ namespace HighlightsVault
 
                 app.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Highlights}/{action=Index}/{id?}");
 
                 app.Run();
             }
