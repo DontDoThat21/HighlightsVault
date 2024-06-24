@@ -1,4 +1,4 @@
-Highlights Vault is a .NET Core MVC application that stores descriptions, names, dates, a picture, and a "highlight" video clip per row in an organized manner through an intuitive user interface..
+Highlights Vault is a .NET Core MVC application that stores descriptions, names, dates, a picture, and a "highlight" video clip per row in an organized manner through an intuitive user interface.
 The application has two "modes" powered by simple Password entry (SQL table entry with a password. Should consider changing this ESPECIALLY if/when not using this locally.)
 
 Features
